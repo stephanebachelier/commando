@@ -20,16 +20,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stephanebachelier/backbone.commando"
+    "url": "https://github.com/stephanebachelier/commando"
   },
   "keywords": [
     "command",
-    "decoupling"
+    "decoupling",
+    "promise"
   ],
   "author": "Stéphane Bachelier <stephane.bachelier@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/stephanebachelier/backbone.commando/issues"
+    "url": "https://github.com/stephanebachelier/commando/issues"
   },
-  "homepage": "https://github.com/stephanebachelier/backbone.commando"
+  "homepage": "https://github.com/stephanebachelier/commando"
 }
