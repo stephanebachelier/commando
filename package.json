@@ -1,6 +1,6 @@
 {
   "name": "commando",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Use of command pattern to ease decoupling",
   "main": "dist/commonjs/commando.js",
   "scripts": {
