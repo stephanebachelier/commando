@@ -7,7 +7,7 @@ module.exports = function(grunt) {
 
   grunt.loadTasks('tasks');
 
-  this.registerTask('default', ['build']);
+  this.registerTask('default', ['build', 'docs']);
 
   // Build a new version of the library
   this.registerTask('build', 'Builds a distributable version of <%= cfg.name %>', [
