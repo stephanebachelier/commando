@@ -19,6 +19,8 @@ module.exports = function(grunt) {
     'uglify'
   ]);
 
+  this.registerTask('docs', 'Build the docs', [ 'docco' ]);
+
   config.env = process.env;
   config.pkg = grunt.file.readJSON('package.json')
 

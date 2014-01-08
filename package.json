@@ -6,6 +6,7 @@
   "scripts": {
     "test": "npm test"
   },
+  "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-cli": "~0.1.11",
@@ -16,7 +17,8 @@
     "grunt-contrib-jshint": "~0.7.0",
     "grunt-contrib-uglify": "~0.2.4",
     "grunt-es6-module-transpiler": "~0.5.0",
-    "jshint": "~0.9"
+    "jshint": "~0.9",
+    "grunt-docco": "~0.3.1"
   },
   "repository": {
     "type": "git",
