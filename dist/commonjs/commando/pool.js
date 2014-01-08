@@ -16,9 +16,9 @@ function CommandPool(eventHub, Promise, commandMap) {
   var _this = this;
   this.Promise = Promise;
   this.eventHub = eventHub;
-  commandMap.forEach(function(Command, event) {
-    return _this.addCommand(event, Command);
-  });
+  for(var event in commandMap) {
+    _this.addCommand(event, commandMap[event]);
+  }
 };
 
 CommandPool.prototype = {
@@ -26,7 +26,7 @@ CommandPool.prototype = {
 
   // execute a `command` using command launcher
   execute: function(command) {
-    this._launcher.execute(command);
+    this.launcher().execute(command);
   },
 
   // return existing launcher or create a new one if it does not exist
@@ -56,16 +56,13 @@ CommandPool.prototype = {
 
   // internal command which add an (`event`, `command`) couple to command pool
   _addCommand: function(event, Command) {
-    var command, commands;
-    command = new Launcher({
-      command: Command
-    });
-    this._bindCommand(event, command);
+    var commands;
+    this._bindCommand(event, Command);
     commands = this.getCommandsEvent(event);
     if (commands) {
-      return commands.push(command);
+      return commands.push(Command);
     } else {
-      return this._commands[event] = [command];
+      return this._commands[event] = [Command];
     }
   },
 
