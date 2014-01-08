@@ -2,7 +2,7 @@
   "name": "commando",
   "version": "0.2.0",
   "description": "Use of command pattern to ease decoupling",
-  "main": "index.js",
+  "main": "dist/commonjs/commando.js",
   "scripts": {
     "test": "npm test"
   },
