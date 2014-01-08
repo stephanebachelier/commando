@@ -141,9 +141,9 @@ If no `commands` is given it will remove all previously commands registered with
 
 ## Roadmap
 
- * [] add tests
- * [] add examples
- * [] add docs (docco ?)
+ * [ ] add tests
+ * [ ] add examples
+ * [X] add docs
 
 ## License
 
