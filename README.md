@@ -12,6 +12,24 @@ This project has no dependency and only add ~1.8k in amd minified version and < 
  * command launcher which wraps your command in a promise
  * command pool which basically create a map between event and commands
 
+## Version
+
+### AMD
+
+ * non minified: `dist/commando.amd.js`
+ * minified version: `dist/commando.amd.min.js`
+
+### Common JS
+
+ * the whole library: `dist/commonjs/commando.js`
+ * or if you only want a part:
+    * command launcher: `dist/commonjs/commando/launcher`
+    * command pool: `dist/commonjs/commando/pool`
+
+### Browser version
+
+TODO
+
 ## Usage
 
 ### Command launcher
@@ -144,6 +162,7 @@ If no `commands` is given it will remove all previously commands registered with
  * [ ] add tests
  * [ ] add examples
  * [X] add docs
+ * [ ] provide a browser version
 
 ## License
 
