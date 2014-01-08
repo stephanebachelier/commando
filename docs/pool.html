@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>pool.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="commando.html">
+                commando.js
+              </a>
+            
+              
+              <a class="source" href="launcher.html">
+                launcher.js
+              </a>
+            
+              
+              <a class="source" href="pool.html">
+                pool.js
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>pool.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>import Launcher from <span class="string">'commando/launcher'</span>;
+import { isArray } from <span class="string">'commando/utils'</span>;
+
+export <span class="keyword">default</span> CommandPool;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h2 id="command-pool-constructor">Command pool constructor</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Accepts these args:</p>
+<ul>
+<li><code>eventHub</code>: Object to use to bind events to command calls</li>
+<li><code>Promise</code>: Function, promise constructor to create promise</li>
+<li><code>commandMap</code>: Object which is basically a map to bind event to command call.
+Useful to create binding at startup</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="keyword">function</span> <span class="title">CommandPool</span><span class="params">(eventHub, Promise, commandMap)</span> {</span>
+  <span class="keyword">var</span> _this = <span class="keyword">this</span>;
+  <span class="keyword">this</span>.Promise = Promise;
+  <span class="keyword">this</span>.eventHub = eventHub;
+  commandMap.forEach(<span class="function"><span class="keyword">function</span><span class="params">(Command, event)</span> {</span>
+    <span class="keyword">return</span> _this.addCommand(event, Command);
+  });
+};
+
+CommandPool.prototype = {
+  _commands: {},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>execute a <code>command</code> using command launcher</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  execute: <span class="function"><span class="keyword">function</span><span class="params">(command)</span> {</span>
+    <span class="keyword">this</span>._launcher.execute(command);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>return existing launcher or create a new one if it does not exist
+override this method to provide a new implementation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  launcher: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">if</span> (!<span class="keyword">this</span>._launcher) {
+      <span class="keyword">this</span>._launcher = <span class="keyword">new</span> Launcher({
+        promise: <span class="keyword">this</span>.Promise
+      });
+    }
+    <span class="keyword">return</span> <span class="keyword">this</span>._launcher;
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>internal function to bind an <code>event</code> to a <code>command</code> call</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  _bindCommand: <span class="function"><span class="keyword">function</span><span class="params">(event, command)</span> {</span>
+    <span class="keyword">return</span> <span class="keyword">this</span>.eventHub.on(event, <span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
+      <span class="keyword">this</span>.execute(command);
+    }, <span class="keyword">this</span>);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>internal function to unbind an <code>event</code> to a <code>command</code> call</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  _unbindCommand: <span class="function"><span class="keyword">function</span><span class="params">(event, command)</span> {</span>
+    <span class="keyword">return</span> <span class="keyword">this</span>.eventHub.off(event, <span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
+      <span class="keyword">this</span>.execute(command);
+    }, <span class="keyword">this</span>);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>internal command which add an (<code>event</code>, <code>command</code>) couple to command pool</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  _addCommand: <span class="function"><span class="keyword">function</span><span class="params">(event, Command)</span> {</span>
+    <span class="keyword">var</span> command, commands;
+    command = <span class="keyword">new</span> Launcher({
+      command: Command
+    });
+    <span class="keyword">this</span>._bindCommand(event, command);
+    commands = <span class="keyword">this</span>.getCommandsEvent(event);
+    <span class="keyword">if</span> (commands) {
+      <span class="keyword">return</span> commands.push(command);
+    } <span class="keyword">else</span> {
+      <span class="keyword">return</span> <span class="keyword">this</span>._commands[event] = [command];
+    }
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>internal command which remove an (<code>event</code>, <code>command</code>) couple to command pool
+support also the removal of all commands binded to <code>event</code> by passing a <code>null</code> <code>command</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  _delCommand: <span class="function"><span class="keyword">function</span><span class="params">(event, command)</span> {</span>
+    <span class="keyword">var</span> commands;
+    <span class="keyword">if</span> (!event) {
+      <span class="keyword">return</span>;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>unbind <code>command</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>._unbindCommand(event, command);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>remove commands</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> (!command) {
+      <span class="keyword">delete</span> <span class="keyword">this</span>._commands[event];
+    } <span class="keyword">else</span> {
+      commands = <span class="keyword">this</span>.getCommandsEvent(event);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>remove any commands found</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">var</span> index = commands.indexOf(command);
+      <span class="keyword">if</span> (-<span class="number">1</span> != index) {
+        commands.splice(index, <span class="number">1</span>);
+      }
+    }
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>find the commands binded to an <code>event</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  getCommandsEvent: <span class="function"><span class="keyword">function</span><span class="params">(event)</span> {</span>
+    <span class="keyword">return</span> <span class="keyword">this</span>._commands[event];
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>add <code>commands</code> to pool and bind them to <code>event</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  addCommand: <span class="function"><span class="keyword">function</span><span class="params">(event, commands)</span> {</span>
+    <span class="keyword">var</span> commandsArr,
+      _this = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>nothing to do</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> (!event) {
+      <span class="keyword">return</span>;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>add support for single command</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> (!isArray(commands)) {
+      commandsArr = [commands];
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>now add the commands</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> commandsArr.forEach(<span class="function"><span class="keyword">function</span><span class="params">(command)</span> {</span>
+      <span class="keyword">return</span> _this._addCommand(event, command);
+    });
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>replace <em>all</em> existing <code>commands</code> binded to an <code>event</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  setCommand: <span class="function"><span class="keyword">function</span><span class="params">(event, commands)</span> {</span>
+    <span class="keyword">if</span> (!event) {
+      <span class="keyword">return</span>;
+    }
+    <span class="keyword">this</span>.delCommand(event);
+    <span class="keyword">return</span> <span class="keyword">this</span>.addCommand(event, commands);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>delete <code>commands</code> binded to <code>event</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  delCommand: <span class="function"><span class="keyword">function</span><span class="params">(event, commands)</span> {</span>
+    <span class="keyword">var</span> commandsArr,
+      _this = <span class="keyword">this</span>;
+    <span class="keyword">if</span> (!event) {
+      <span class="keyword">return</span>;
+    }
+    <span class="keyword">if</span> (!commands) {
+      <span class="keyword">return</span> <span class="keyword">this</span>._delCommand(event);
+    } <span class="keyword">else</span> {
+      <span class="keyword">if</span> (isArray(commands)) {
+        commandsArr = [commands];
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>now delete the commands</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">return</span> commandsArr.forEach(<span class="function"><span class="keyword">function</span><span class="params">(command)</span> {</span>
+        <span class="keyword">return</span> _this._delCommand(event, command);
+      });
+    }
+  }
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

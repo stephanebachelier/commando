@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>launcher.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="commando.html">
+                commando.js
+              </a>
+            
+              
+              <a class="source" href="launcher.html">
+                launcher.js
+              </a>
+            
+              
+              <a class="source" href="pool.html">
+                pool.js
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>launcher.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>export <span class="keyword">default</span> CommandLauncher;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Create a command launcher with <code>options</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="keyword">function</span> <span class="title">CommandLauncher</span><span class="params">(options)</span> {</span>
+  <span class="keyword">this</span>.options = options;
+}
+
+CommandLauncher.prototype = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Launch the execution of <code>Command</code> function. It create the command and wraps it in a Promise.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  execute: <span class="function"><span class="keyword">function</span><span class="params">(Command)</span> {</span>
+    <span class="keyword">var</span> args, resolver,
+      _this = <span class="keyword">this</span>;
+    args = <span class="number">1</span> &lt;= arguments.length ? Array.prototype.slice.call(arguments, <span class="number">0</span>) : [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>create the resolver responsible for the creation and the execution
+of the <code>Command</code>.
+The command created must conform to the API <code>Command(resolve, reject)</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    resolver = <span class="function"><span class="keyword">function</span><span class="params">(resolve, reject)</span> {</span>
+      <span class="keyword">var</span> command;
+      command = <span class="keyword">new</span> Command(resolve, reject);
+      <span class="keyword">return</span> command.execute(args);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>return the created promise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> <span class="keyword">this</span>.promise(resolver);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>This function is the one responsible for creating the promise around the <code>resolver</code> provided .
+The purpose of this function is to permit overriding of the promise definition based on any logic or context.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  promise: <span class="function"><span class="keyword">function</span> <span class="params">(resolver)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>create the promise based on the promise function given
+as an option</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">this</span>.options.promise(resolver);
+  }
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
