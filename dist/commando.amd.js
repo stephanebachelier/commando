@@ -1,6 +1,6 @@
 /**
   @module Commando
-  @version 0.2.0
+  @version 0.2.2
   */
 define("commando/launcher", 
   ["exports"],
@@ -15,17 +15,17 @@ define("commando/launcher",
 
     CommandLauncher.prototype = {
       // Launch the execution of `Command` function. It create the command and wraps it in a Promise.
-      execute: function(Command) {
-        var args, resolver,
+      execute: function(Command, args) {
+        var resolver,
           _this = this;
-        args = 1 <= arguments.length ? Array.prototype.slice.call(arguments, 0) : [];
+
         // create the resolver responsible for the creation and the execution
         // of the `Command`.
         // The command created must conform to the API `Command(resolve, reject)`.
         resolver = function(resolve, reject) {
           var command;
           command = new Command(resolve, reject);
-          return command.execute(args);
+          return command.execute.apply(command, args);
         };
         // return the created promise
         return this.promise(resolver);
@@ -70,8 +70,8 @@ define("commando/pool",
       _commands: {},
 
       // execute a `command` using command launcher
-      execute: function(command) {
-        this.launcher().execute(command);
+      execute: function(command, args) {
+        this.launcher().execute(command, args);
       },
 
       // return existing launcher or create a new one if it does not exist
@@ -88,14 +88,14 @@ define("commando/pool",
       // internal function to bind an `event` to a `command` call
       _bindCommand: function(event, command) {
         return this.eventHub.on(event, function () {
-          this.execute(command);
+          this.execute(command, Array.prototype.splice.call(arguments, 0, 1));
         }, this);
       },
 
       // internal function to unbind an `event` to a `command` call
       _unbindCommand: function(event, command) {
         return this.eventHub.off(event, function () {
-          this.execute(command);
+          this.execute(command, Array.prototype.splice.call(arguments, 0, 1));
         }, this);
       },
 

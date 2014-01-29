@@ -123,8 +123,8 @@ CommandPool.prototype = {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  execute: <span class="function"><span class="keyword">function</span><span class="params">(command)</span> {</span>
-    <span class="keyword">this</span>.launcher().execute(command);
+            <div class="content"><div class='highlight'><pre>  execute: <span class="function"><span class="keyword">function</span><span class="params">(command, args)</span> {</span>
+    <span class="keyword">this</span>.launcher().execute(command, args);
   },</pre></div></div>
             
         </li>
@@ -165,7 +165,7 @@ override this method to provide a new implementation</p>
             
             <div class="content"><div class='highlight'><pre>  _bindCommand: <span class="function"><span class="keyword">function</span><span class="params">(event, command)</span> {</span>
     <span class="keyword">return</span> <span class="keyword">this</span>.eventHub.on(event, <span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
-      <span class="keyword">this</span>.execute(command);
+      <span class="keyword">this</span>.execute(command, Array.prototype.splice.call(arguments, <span class="number">0</span>, <span class="number">1</span>));
     }, <span class="keyword">this</span>);
   },</pre></div></div>
             
@@ -184,7 +184,7 @@ override this method to provide a new implementation</p>
             
             <div class="content"><div class='highlight'><pre>  _unbindCommand: <span class="function"><span class="keyword">function</span><span class="params">(event, command)</span> {</span>
     <span class="keyword">return</span> <span class="keyword">this</span>.eventHub.off(event, <span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
-      <span class="keyword">this</span>.execute(command);
+      <span class="keyword">this</span>.execute(command, Array.prototype.splice.call(arguments, <span class="number">0</span>, <span class="number">1</span>));
     }, <span class="keyword">this</span>);
   },</pre></div></div>
             

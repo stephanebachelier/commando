@@ -25,8 +25,8 @@ CommandPool.prototype = {
   _commands: {},
 
   // execute a `command` using command launcher
-  execute: function(command) {
-    this.launcher().execute(command);
+  execute: function(command, args) {
+    this.launcher().execute(command, args);
   },
 
   // return existing launcher or create a new one if it does not exist
@@ -43,14 +43,14 @@ CommandPool.prototype = {
   // internal function to bind an `event` to a `command` call
   _bindCommand: function(event, command) {
     return this.eventHub.on(event, function () {
-      this.execute(command);
+      this.execute(command, Array.prototype.splice.call(arguments, 0, 1));
     }, this);
   },
 
   // internal function to unbind an `event` to a `command` call
   _unbindCommand: function(event, command) {
     return this.eventHub.off(event, function () {
-      this.execute(command);
+      this.execute(command, Array.prototype.splice.call(arguments, 0, 1));
     }, this);
   },
 

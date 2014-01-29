@@ -95,10 +95,9 @@ CommandLauncher.prototype = {</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  execute: <span class="function"><span class="keyword">function</span><span class="params">(Command)</span> {</span>
-    <span class="keyword">var</span> args, resolver,
-      _this = <span class="keyword">this</span>;
-    args = <span class="number">1</span> &lt;= arguments.length ? Array.prototype.slice.call(arguments, <span class="number">0</span>) : [];</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  execute: <span class="function"><span class="keyword">function</span><span class="params">(Command, args)</span> {</span>
+    <span class="keyword">var</span> resolver,
+      _this = <span class="keyword">this</span>;</pre></div></div>
             
         </li>
         
@@ -118,7 +117,7 @@ The command created must conform to the API <code>Command(resolve, reject)</code
             <div class="content"><div class='highlight'><pre>    resolver = <span class="function"><span class="keyword">function</span><span class="params">(resolve, reject)</span> {</span>
       <span class="keyword">var</span> command;
       command = <span class="keyword">new</span> Command(resolve, reject);
-      <span class="keyword">return</span> command.execute(args);
+      <span class="keyword">return</span> command.execute.apply(command, args);
     };</pre></div></div>
             
         </li>
