@@ -126,6 +126,11 @@ The purpose of this function is to permit overriding of the promise definition b
 
 Launch the execution of `command`.
 
+#### `commandError: function (error)`
+
+A global error handler attached to the promise to avoid a silent failure.
+By default this handler does nothing. It's just an empty function that you should override for your own needs.
+
 #### `launcher: function()`
 
 Create the launcher or return the previously created launcher that will be responsible for launching any command.

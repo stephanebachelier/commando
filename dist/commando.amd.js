@@ -1,6 +1,6 @@
 /**
   @module Commando
-  @version 0.2.2
+  @version 0.2.3
   */
 define("commando/launcher", 
   ["exports"],
@@ -71,8 +71,11 @@ define("commando/pool",
 
       // execute a `command` using command launcher
       execute: function(command, args) {
-        this.launcher().execute(command, args);
+        this.launcher().execute(command, args).catch(this.commandError);
       },
+
+      // main error handler to override
+      commandError: function (error) {},
 
       // return existing launcher or create a new one if it does not exist
       // override this method to provide a new implementation
