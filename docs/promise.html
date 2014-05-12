@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>launcher.js</title>
+  <title>promise.js</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -21,11 +21,6 @@
               
               <a class="source" href="commando.html">
                 commando.js
-              </a>
-            
-              
-              <a class="source" href="launcher.html">
-                launcher.js
               </a>
             
               
@@ -56,7 +51,7 @@
         
           <li id="title">
               <div class="annotation">
-                  <h1>launcher.js</h1>
+                  <h1>promise.js</h1>
               </div>
           </li>
         
@@ -71,7 +66,7 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>export <span class="keyword">default</span> CommandLauncher;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>export <span class="hljs-keyword">default</span> PromiseLauncher;</pre></div></div>
             
         </li>
         
@@ -86,11 +81,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="function"><span class="keyword">function</span> <span class="title">CommandLauncher</span><span class="params">(options)</span> {</span>
-  <span class="keyword">this</span>.options = options;
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">PromiseLauncher</span><span class="hljs-params">(options)</span> {</span>
+  <span class="hljs-keyword">this</span>.options = options;
 }
 
-CommandLauncher.prototype = {</pre></div></div>
+PromiseLauncher.prototype = {</pre></div></div>
             
         </li>
         
@@ -105,9 +100,9 @@ CommandLauncher.prototype = {</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  execute: <span class="function"><span class="keyword">function</span><span class="params">(Command, args)</span> {</span>
-    <span class="keyword">var</span> resolver,
-      _this = <span class="keyword">this</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  execute: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Command, args, options)</span> {</span>
+    <span class="hljs-keyword">var</span> resolver,
+      _this = <span class="hljs-keyword">this</span>;</pre></div></div>
             
         </li>
         
@@ -124,10 +119,10 @@ The command created must conform to the API <code>Command(resolve, reject)</code
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    resolver = <span class="function"><span class="keyword">function</span><span class="params">(resolve, reject)</span> {</span>
-      <span class="keyword">var</span> command;
-      command = <span class="keyword">new</span> Command(resolve, reject);
-      <span class="keyword">return</span> command.execute.apply(command, args);
+            <div class="content"><div class='highlight'><pre>    resolver = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(resolve, reject)</span> {</span>
+      <span class="hljs-keyword">var</span> command;
+      command = <span class="hljs-keyword">new</span> Command(resolve, reject);
+      <span class="hljs-keyword">return</span> command.execute.apply(command, args);
     };</pre></div></div>
             
         </li>
@@ -143,7 +138,7 @@ The command created must conform to the API <code>Command(resolve, reject)</code
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> <span class="keyword">this</span>.promise(resolver);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.promise(resolver).catch(options.error);
   },</pre></div></div>
             
         </li>
@@ -160,7 +155,7 @@ The purpose of this function is to permit overriding of the promise definition b
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  promise: <span class="function"><span class="keyword">function</span> <span class="params">(resolver)</span> {</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  promise: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(resolver)</span> {</span></pre></div></div>
             
         </li>
         
@@ -176,7 +171,7 @@ as an option</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">this</span>.options.promise(resolver);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">this</span>.options.promise(resolver);
   }
 };</pre></div></div>
             

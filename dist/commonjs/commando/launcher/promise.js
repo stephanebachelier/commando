@@ -1,14 +1,14 @@
 "use strict";
-exports["default"] = CommandLauncher;
+exports["default"] = PromiseLauncher;
 
 // Create a command launcher with `options`.
-function CommandLauncher(options) {
+function PromiseLauncher(options) {
   this.options = options;
 }
 
-CommandLauncher.prototype = {
+PromiseLauncher.prototype = {
   // Launch the execution of `Command` function. It create the command and wraps it in a Promise.
-  execute: function(Command, args) {
+  execute: function(Command, args, options) {
     var resolver,
       _this = this;
 
@@ -21,7 +21,7 @@ CommandLauncher.prototype = {
       return command.execute.apply(command, args);
     };
     // return the created promise
-    return this.promise(resolver);
+    return this.promise(resolver).catch(options.error);
   },
 
   // This function is the one responsible for creating the promise around the `resolver` provided .

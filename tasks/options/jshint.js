@@ -4,5 +4,8 @@ module.exports = {
   },
   output: {
     src: ['lib/*.js']
+  },
+  test: {
+    src: ['test/spec/*.js']
   }
 };

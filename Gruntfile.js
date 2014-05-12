@@ -15,11 +15,14 @@ module.exports = function(grunt) {
     'transpile:amd',
     'transpile:commonjs',
     'concat:amd',
-    'jshint',
+    'jshint:output',
     'uglify'
   ]);
 
   this.registerTask('docs', 'Build the docs', [ 'docco' ]);
+
+  //this.registerTask('test', 'Run the test', [ 'simplemocha', 'jshint:test' ]);
+  this.registerTask('test', 'Run the test', [ 'karma', 'jshint:test' ]);
 
   config.env = process.env;
   config.pkg = grunt.file.readJSON('package.json')

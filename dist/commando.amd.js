@@ -1,21 +1,48 @@
 /**
   @module Commando
-  @version 0.2.3
+  @version 0.3.0
   */
-define("commando/launcher", 
+define("commando/launcher/default", 
   ["exports"],
   function(__exports__) {
     "use strict";
-    __exports__["default"] = CommandLauncher;
+    __exports__["default"] = DefaultLauncher;
 
     // Create a command launcher with `options`.
-    function CommandLauncher(options) {
+    function DefaultLauncher() {}
+
+    DefaultLauncher.prototype = {
+      execute: function (command, args, options) {
+        var errorHandler;
+        if (options && options.error && typeof options.error === 'function') {
+          errorHandler = options.error;
+        }
+
+        try{
+          return command.apply(command, args);
+        }
+        catch (e) {
+          if (errorHandler) {
+            errorHandler(e);
+          }
+        }
+      }
+    };
+  });
+define("commando/launcher/promise", 
+  ["exports"],
+  function(__exports__) {
+    "use strict";
+    __exports__["default"] = PromiseLauncher;
+
+    // Create a command launcher with `options`.
+    function PromiseLauncher(options) {
       this.options = options;
     }
 
-    CommandLauncher.prototype = {
+    PromiseLauncher.prototype = {
       // Launch the execution of `Command` function. It create the command and wraps it in a Promise.
-      execute: function(Command, args) {
+      execute: function(Command, args, options) {
         var resolver,
           _this = this;
 
@@ -28,7 +55,7 @@ define("commando/launcher",
           return command.execute.apply(command, args);
         };
         // return the created promise
-        return this.promise(resolver);
+        return this.promise(resolver).catch(options.error);
       },
 
       // This function is the one responsible for creating the promise around the `resolver` provided .
@@ -41,11 +68,12 @@ define("commando/launcher",
     };
   });
 define("commando/pool", 
-  ["commando/launcher","commando/utils","exports"],
-  function(__dependency1__, __dependency2__, __exports__) {
+  ["commando/launcher/default","commando/launcher/promise","commando/utils","exports"],
+  function(__dependency1__, __dependency2__, __dependency3__, __exports__) {
     "use strict";
-    var Launcher = __dependency1__["default"];
-    var isArray = __dependency2__.isArray;
+    var DefaultLauncher = __dependency1__["default"];
+    var PromiseLauncher = __dependency2__["default"];
+    var isArray = __dependency3__.isArray;
 
     __exports__["default"] = CommandPool;
 
@@ -54,24 +82,35 @@ define("commando/pool",
     //
     // Accepts these args:
     //  * `eventHub`: Object to use to bind events to command calls
-    //  * `Promise`: Function, promise constructor to create promise
     //  * `commandMap`: Object which is basically a map to bind event to command call.
     //    Useful to create binding at startup
-    function CommandPool(eventHub, Promise, commandMap) {
+    //  * `options`: Object to set some options. Supported options:
+    //      + launcher: String ('default', 'promise'): enable the setup of the launcher
+    //      using the default ones provided. If you want to setup a custom launcher use
+    //      the `withLauncher(object)` method
+    function CommandPool(eventHub, commandMap, options) {
       var _this = this;
-      this.Promise = Promise;
       this.eventHub = eventHub;
       for(var event in commandMap) {
         _this.addCommand(event, commandMap[event]);
       }
+      this.options = options;
     };
 
     CommandPool.prototype = {
       _commands: {},
 
+      // to setup a custom launcher
+      // return this to enable chaining calls.
+      withLauncher: function (launcher) {
+        this._launcher = launcher;
+        return this;
+      },
+
       // execute a `command` using command launcher
       execute: function(command, args) {
-        this.launcher().execute(command, args).catch(this.commandError);
+        //this.launcher().execute(command, args).catch(this.commandError);
+        this.launcher().execute(command, args, {error: this.commandError});
       },
 
       // main error handler to override
@@ -81,9 +120,7 @@ define("commando/pool",
       // override this method to provide a new implementation
       launcher: function() {
         if (!this._launcher) {
-          this._launcher = new Launcher({
-            promise: this.Promise
-          });
+          this._launcher = new DefaultLauncher();
         }
         return this._launcher;
       },
@@ -202,13 +239,15 @@ define("commando/utils",
     __exports__.isArray = isArray;
   });
 define("commando", 
-  ["./commando/launcher","./commando/pool","exports"],
-  function(__dependency1__, __dependency2__, __exports__) {
+  ["commando/launcher/default","commando/launcher/promise","./commando/pool","exports"],
+  function(__dependency1__, __dependency2__, __dependency3__, __exports__) {
     "use strict";
-    var Launcher = __dependency1__["default"];
-    var Pool = __dependency2__["default"];
+    var DefaultLauncher = __dependency1__["default"];
+    var PromiseLauncher = __dependency2__["default"];
+    var Pool = __dependency3__["default"];
 
     // export API
-    __exports__.Launcher = Launcher;
+    __exports__.DefaultLauncher = DefaultLauncher;
+    __exports__.PromiseLauncher = PromiseLauncher;
     __exports__.Pool = Pool;
   });

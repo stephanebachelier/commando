@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>commando.js</title>
+  <title>default.js</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -51,7 +51,7 @@
         
           <li id="title">
               <div class="annotation">
-                  <h1>commando.js</h1>
+                  <h1>default.js</h1>
               </div>
           </li>
         
@@ -66,9 +66,7 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>import DefaultLauncher from <span class="hljs-string">'commando/launcher/default'</span>;
-import PromiseLauncher from <span class="hljs-string">'commando/launcher/promise'</span>;
-import Pool from <span class="hljs-string">'./commando/pool'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>export <span class="hljs-keyword">default</span> DefaultLauncher;</pre></div></div>
             
         </li>
         
@@ -79,11 +77,29 @@ import Pool from <span class="hljs-string">'./commando/pool'</span>;</pre></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>export API</p>
+              <p>Create a command launcher with <code>options</code>.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>export { DefaultLauncher, PromiseLauncher, Pool };</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">DefaultLauncher</span><span class="hljs-params">()</span> {</span>}
+
+DefaultLauncher.prototype = {
+  execute: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(command, args, options)</span> {</span>
+    <span class="hljs-keyword">var</span> errorHandler;
+    <span class="hljs-keyword">if</span> (options &amp;&amp; options.error &amp;&amp; <span class="hljs-keyword">typeof</span> options.error === <span class="hljs-string">'function'</span>) {
+      errorHandler = options.error;
+    }
+
+    <span class="hljs-keyword">try</span>{
+      <span class="hljs-keyword">return</span> command.apply(command, args);
+    }
+    <span class="hljs-keyword">catch</span> (e) {
+      <span class="hljs-keyword">if</span> (errorHandler) {
+        errorHandler(e);
+      }
+    }
+  }
+};</pre></div></div>
             
         </li>
         
