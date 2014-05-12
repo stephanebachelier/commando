@@ -1,0 +1,31 @@
+{
+  "name": "commandojs",
+  "version": "0.3.0",
+  "homepage": "https://github.com/stephanebachelier/commando",
+  "authors": [
+    "Stéphane Bachelier <stephane.bachelier@gmail.com>"
+  ],
+  "description": "Use of command pattern to ease decoupling",
+  "main": "dist/commando.amd.js",
+  "moduleType": [
+    "amd",
+    "node"
+  ],
+  "keywords": [
+    "command",
+    "command",
+    "pattern",
+    "decoupling",
+    "promise"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "Gruntfile.js",
+    "tasks"
+  ]
+}
