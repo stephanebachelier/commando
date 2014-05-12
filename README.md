@@ -9,7 +9,9 @@ This project has no dependency and only add ~1.8k in amd minified version and < 
 
 ## What's in
 
- * command launcher which wraps your command in a promise
+ * command launchers:
+    * `default`, which use a function as a command,
+    * `promise`, which wraps your command in a promise
  * command pool which basically create a map between event and commands
 
 ## Version
@@ -32,25 +34,55 @@ TODO
 
 ## Usage
 
-### Command launcher
+### Command launcher without promise support
+
+```javascript
+// given this simple command
+var command = function (a, b) {
+  console.log(a, b);
+};
+
+// Setup default launcher without promise support.
+var launcher = new DefaultLauncher();
+
+launcher.execute(command, ['foo', 'bar']);
+
+// it will print the following message to console
+foo, bar
+```
+
+
+### Command launcher with promise support
 
 ```javascript
 // Setup launcher with Promise object.
-var launcher = new CommandLauncher({
+var launcher = new PromiseLauncher({
   promise: Promise
 });
 
 // Execute a command
 // Command should have a constructor which conforms to this API:
 //   function(resolve, reject) {}
-var promise = launcher.execute(LoginCommand);
 
+Command = function (resolve, reject) {
+  // keep a reference on these two resolvers
+  this.success = resolve;
+  this.error = reject;
+};
+
+Command.prototype.execute(a, b) {
+  // do something and calls
+  // e.g this function will invert a and b
+  ok ? this.success(b, a) : this.error('something wrong');
+};
+
+var promise = launcher.execute(Command, ['foo', 'bar']);
 
 // Add a callback
-promise.then(function () {
-  console.log('Success!');
-}, function () {
-  console.warn('Error!');
+promise.then(function (one, two) {
+  console.log('Success!', one, two); // will print 'Success, bar, foo'
+}, function (error) {
+  console.warn('Error!', error); // will print 'Error! something wrong'
 });
 ```
 
@@ -65,9 +97,12 @@ var commandMap = {
 
 // Pass some arguments
 // * eventHub (required) : any object with on, off and trigger methods
-// * Promise (required) : any implementation of promises
 // * commandMap (optional) : to register some commands
-var pool = new CommandPool(eventHub, Promise, commandMap);
+// * options: (optional): Object to set some options. Supported options:
+//    + launcher: String ('default', 'promise'): enable the setup of the launcher
+//      using the default ones provided. If you want to setup a custom launcher use
+//      the `withLauncher(object)` method
+var pool = new CommandPool(eventHub, commandMap, options);
 
 // register a new command for `logout` event
 pool.addCommand('logout', LogoutCommand);
@@ -91,76 +126,7 @@ TODO
 
 ## API
 
-### CommandLauncher
-
-#### CommandLauncher(options)
-
- * `options`: Object
-
-Create a launcher with options.
-
-#### execute: function(Command)
-
- * `command`: Function
-
-Launch the execution of `command`. It create the command and wraps it in a Promise.
-
-#### promise: function (resolver)
-
- * `resolver`: Function
-
-This function is the one responsible for creating the promise around the command.
-The purpose of this function is to permit overriding of the promise definition based on any logic or context.
-
-### CommandPool
-
-#### `CommandPool(eventHub, Promise, commandMap)`
-
- * `eventHub`: Object
- * `Promise`: Function, promise constructor
- * `commandMap`: Object which is basically a map
-
-#### `execute: function(command)`
-
- * `command`: Function
-
-Launch the execution of `command`.
-
-#### `commandError: function (error)`
-
-A global error handler attached to the promise to avoid a silent failure.
-By default this handler does nothing. It's just an empty function that you should override for your own needs.
-
-#### `launcher: function()`
-
-Create the launcher or return the previously created launcher that will be responsible for launching any command.
-
-#### `getCommandsEvent: function(event)`
-
- * `event`: String
-
-Return the commands bound to the `event`.
-
-#### `addCommand: function(event, commands)`
-
- * `event`: String
- * `commands`: Function or Array of functions.
-
-Bind one or more command to the `event`.
-
-#### `setCommand: function(event, commands)`
-
- * `event`: String
- * `commands`: Function or Array of functions.
-
-bind the `commands` to `event`, removing all previously defined commands.
-
-#### `delCommand: function(event, commands)`
-
- * `event`: String
- * `commands`: Function or Array of functions.
-
-If no `commands` is given it will remove all previously commands registered with `event`, else remove only the binding to commands provided.
+See docs folder.
 
 ## Roadmap
 
