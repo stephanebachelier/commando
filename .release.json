@@ -1,0 +1,6 @@
+{
+  "buildCommand": "grunt build"
+  "pkgFiles": ["package.json", "bower.json"],
+  "commitMessage": "bump version %s",
+  "tagAnnotation": "Release %s"
+}
