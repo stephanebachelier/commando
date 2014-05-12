@@ -28,6 +28,7 @@
   },
   "keywords": [
     "command",
+    "command pattern",
     "decoupling",
     "promise"
   ],
