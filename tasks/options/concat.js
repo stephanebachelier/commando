@@ -1,7 +1,7 @@
 module.exports = {
   amd: {
-    src: ['tmp/<%= pkg.name %>/**/*.amd.js', 'tmp/<%= pkg.name %>.amd.js'],
-    dest: 'dist/<%= pkg.name %>.amd.js',
+    src: ['tmp/commando/**/*.amd.js', 'tmp/commando.amd.js'],
+    dest: 'dist/commando.amd.js',
     options: {
       banner: '/**\n' +
               '  @module Commando\n' +
@@ -11,8 +11,8 @@ module.exports = {
   },
 
   amdNoVersion: {
-    src: ['tmp/<%= pkg.name %>/**/*.amd.js', 'tmp/<%= pkg.name %>.amd.js'],
-    dest: 'dist/<%= pkg.name %>.amd.js'
+    src: ['tmp/commando/**/*.amd.js', 'tmp/commando.amd.js'],
+    dest: 'dist/commando.amd.js'
   },
 
   deps: {
