@@ -73,9 +73,9 @@ CommandPool.prototype = {
     this._bindCommand(event, Command);
     commands = this.getCommandsEvent(event);
     if (commands) {
-      return commands.push(Command);
+      commands.push(Command);
     } else {
-      return this._commands[event] = [Command];
+      this._commands[event] = [Command];
     }
   },
 
@@ -84,7 +84,7 @@ CommandPool.prototype = {
   _delCommand: function(event, command) {
     var commands;
     if (!event) {
-      return;
+      return this;
     }
     // unbind `command`
     this._unbindCommand(event, command);
@@ -99,7 +99,6 @@ CommandPool.prototype = {
         commands.splice(index, 1);
       }
     }
-    return this;
   },
 
   // find the commands binded to an `event`
@@ -113,16 +112,18 @@ CommandPool.prototype = {
       _this = this;
     // nothing to do
     if (!event) {
-      return;
+      return this;
     }
     // add support for single command
     if (!isArray(commands)) {
       commandsArr = [commands];
     }
     // now add the commands
-    return commandsArr.forEach(function(command) {
-      return _this._addCommand(event, command);
+    commandsArr.forEach(function(command) {
+      _this._addCommand(event, command);
     });
+
+    return this;
   },
 
   // replace *all* existing `commands` binded to an `event`
@@ -139,18 +140,19 @@ CommandPool.prototype = {
     var commandsArr,
       _this = this;
     if (!event) {
-      return;
+      return this;
     }
     if (!commands) {
-      return this._delCommand(event);
+      this._delCommand(event);
     } else {
       if (isArray(commands)) {
         commandsArr = [commands];
       }
       // now delete the commands
-      return commandsArr.forEach(function(command) {
-        return _this._delCommand(event, command);
+      commandsArr.forEach(function(command) {
+        _this._delCommand(event, command);
       });
     }
+    return this;
   }
 };

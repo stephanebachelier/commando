@@ -1,6 +1,6 @@
 /**
   @module Commando
-  @version 0.4.1
+  @version 0.5.0
   */
 define("commando/launcher/default", 
   ["exports"],
@@ -145,9 +145,9 @@ define("commando/pool",
         this._bindCommand(event, Command);
         commands = this.getCommandsEvent(event);
         if (commands) {
-          return commands.push(Command);
+          commands.push(Command);
         } else {
-          return this._commands[event] = [Command];
+          this._commands[event] = [Command];
         }
       },
 
@@ -156,7 +156,7 @@ define("commando/pool",
       _delCommand: function(event, command) {
         var commands;
         if (!event) {
-          return;
+          return this;
         }
         // unbind `command`
         this._unbindCommand(event, command);
@@ -171,7 +171,6 @@ define("commando/pool",
             commands.splice(index, 1);
           }
         }
-        return this;
       },
 
       // find the commands binded to an `event`
@@ -185,16 +184,18 @@ define("commando/pool",
           _this = this;
         // nothing to do
         if (!event) {
-          return;
+          return this;
         }
         // add support for single command
         if (!isArray(commands)) {
           commandsArr = [commands];
         }
         // now add the commands
-        return commandsArr.forEach(function(command) {
-          return _this._addCommand(event, command);
+        commandsArr.forEach(function(command) {
+          _this._addCommand(event, command);
         });
+
+        return this;
       },
 
       // replace *all* existing `commands` binded to an `event`
@@ -211,19 +212,20 @@ define("commando/pool",
         var commandsArr,
           _this = this;
         if (!event) {
-          return;
+          return this;
         }
         if (!commands) {
-          return this._delCommand(event);
+          this._delCommand(event);
         } else {
           if (isArray(commands)) {
             commandsArr = [commands];
           }
           // now delete the commands
-          return commandsArr.forEach(function(command) {
-            return _this._delCommand(event, command);
+          commandsArr.forEach(function(command) {
+            _this._delCommand(event, command);
           });
         }
+        return this;
       }
     };
   });
