@@ -1,6 +1,6 @@
 /**
   @module Commando
-  @version 0.5.1
+  @version 0.5.2
   */
 define("commando/launcher/default", 
   ["exports"],
@@ -174,7 +174,7 @@ define("commando/pool",
       },
 
       // find the commands binded to an `event`
-      getCommandsEvent: function(event) {
+      getCommands: function(event) {
         return this._commands[event];
       },
 
