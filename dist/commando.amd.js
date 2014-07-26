@@ -1,6 +1,6 @@
 /**
   @module Commando
-  @version 0.5.2
+  @version 0.5.3
   */
 define("commando/launcher/default", 
   ["exports"],
@@ -143,7 +143,7 @@ define("commando/pool",
       _addCommand: function(event, Command) {
         var commands;
         this._bindCommand(event, Command);
-        commands = this.getCommandsEvent(event);
+        commands = this.getCommands(event);
         if (commands) {
           commands.push(Command);
         } else {
@@ -164,7 +164,7 @@ define("commando/pool",
         if (!command) {
           delete this._commands[event];
         } else {
-          commands = this.getCommandsEvent(event);
+          commands = this.getCommands(event);
           // remove any commands found
           var index = commands.indexOf(command);
           if (-1 != index) {

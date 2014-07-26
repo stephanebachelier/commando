@@ -261,7 +261,7 @@ override this method to provide a new implementation</p>
             <div class="content"><div class='highlight'><pre>  _addCommand: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(event, Command)</span> {</span>
     <span class="hljs-keyword">var</span> commands;
     <span class="hljs-keyword">this</span>._bindCommand(event, Command);
-    commands = <span class="hljs-keyword">this</span>.getCommandsEvent(event);
+    commands = <span class="hljs-keyword">this</span>.getCommands(event);
     <span class="hljs-keyword">if</span> (commands) {
       commands.push(Command);
     } <span class="hljs-keyword">else</span> {
@@ -320,7 +320,7 @@ support also the removal of all commands binded to <code>event</code> by passing
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!command) {
       <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>._commands[event];
     } <span class="hljs-keyword">else</span> {
-      commands = <span class="hljs-keyword">this</span>.getCommandsEvent(event);</pre></div></div>
+      commands = <span class="hljs-keyword">this</span>.getCommands(event);</pre></div></div>
             
         </li>
         
