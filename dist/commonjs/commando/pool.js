@@ -56,14 +56,14 @@ CommandPool.prototype = {
   // internal function to bind an `event` to a `command` call
   _bindCommand: function(event, command) {
     return this.eventHub.on(event, function () {
-      this.execute(command, Array.prototype.splice.call(arguments, 0, 1));
+      this.execute(command, arguments);
     }, this);
   },
 
   // internal function to unbind an `event` to a `command` call
   _unbindCommand: function(event, command) {
     return this.eventHub.off(event, function () {
-      this.execute(command, Array.prototype.splice.call(arguments, 0, 1));
+      this.execute(command, arguments);
     }, this);
   },
 

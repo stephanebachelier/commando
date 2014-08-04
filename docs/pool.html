@@ -222,7 +222,7 @@ override this method to provide a new implementation</p>
             
             <div class="content"><div class='highlight'><pre>  _bindCommand: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(event, command)</span> {</span>
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.eventHub.on(event, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
-      <span class="hljs-keyword">this</span>.execute(command, <span class="hljs-built_in">Array</span>.prototype.splice.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>));
+      <span class="hljs-keyword">this</span>.execute(command, <span class="hljs-built_in">arguments</span>);
     }, <span class="hljs-keyword">this</span>);
   },</pre></div></div>
             
@@ -241,7 +241,7 @@ override this method to provide a new implementation</p>
             
             <div class="content"><div class='highlight'><pre>  _unbindCommand: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(event, command)</span> {</span>
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.eventHub.off(event, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
-      <span class="hljs-keyword">this</span>.execute(command, <span class="hljs-built_in">Array</span>.prototype.splice.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>));
+      <span class="hljs-keyword">this</span>.execute(command, <span class="hljs-built_in">arguments</span>);
     }, <span class="hljs-keyword">this</span>);
   },</pre></div></div>
             
