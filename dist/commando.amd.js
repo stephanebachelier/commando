@@ -1,6 +1,6 @@
 /**
   @module Commando
-  @version 0.5.4
+  @version 0.5.5
   */
 define("commando/launcher/default", 
   ["exports"],
@@ -19,7 +19,7 @@ define("commando/launcher/default",
         }
 
         try{
-          return command.apply(command, args);
+          return command.execute.apply(command, args);
         }
         catch (e) {
           if (errorHandler) {

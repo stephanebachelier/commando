@@ -12,7 +12,7 @@ DefaultLauncher.prototype = {
     }
 
     try{
-      return command.apply(command, args);
+      return command.execute.apply(command, args);
     }
     catch (e) {
       if (errorHandler) {

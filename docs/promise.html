@@ -81,7 +81,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">PromiseLauncher</span><span class="hljs-params">(options)</span> {</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">PromiseLauncher</span><span class="hljs-params">(options)</span> </span>{
   <span class="hljs-keyword">this</span>.options = options;
 }
 
@@ -100,7 +100,7 @@ PromiseLauncher.prototype = {</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  execute: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Command, args, options)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  execute: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Command, args, options)</span> </span>{
     <span class="hljs-keyword">var</span> resolver,
       _this = <span class="hljs-keyword">this</span>;</pre></div></div>
             
@@ -119,7 +119,7 @@ The command created must conform to the API <code>Command(resolve, reject)</code
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    resolver = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(resolve, reject)</span> {</span>
+            <div class="content"><div class='highlight'><pre>    resolver = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(resolve, reject)</span> </span>{
       <span class="hljs-keyword">var</span> command;
       command = <span class="hljs-keyword">new</span> Command(resolve, reject);
       <span class="hljs-keyword">return</span> command.execute.apply(command, args);
@@ -155,7 +155,7 @@ The purpose of this function is to permit overriding of the promise definition b
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  promise: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(resolver)</span> {</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  promise: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(resolver)</span> </span>{</pre></div></div>
             
         </li>
         

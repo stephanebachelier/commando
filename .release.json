@@ -1,11 +1,14 @@
 {
-  "verbose": true,
-  "buildCommand": "grunt build",
-  "pkgFiles": ["package.json", "bower.json"],
-  "commitMessage": "bump version %s",
-  "tagAnnotation": "Release %s",
-  "publish": true,
-  "distFiles": {
-    ".": ["bower.json"]
-  }
+    "verbose": true,
+    "pkgFiles": ["package.json", "bower.json"],
+    "commitMessage": "bump version %s",
+    "tagName": "%s",
+    "tagAnnotation": "Release %s",
+    "buildCommand": "grunt",
+    "distBase": "dist",
+    "distFiles": {
+      "dist": ["**/*"],
+      ".": ["bower.json"]
+    },
+    "publish": true
 }

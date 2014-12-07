@@ -1,6 +1,6 @@
 {
   "name": "commandojs",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "Use of command pattern to ease decoupling",
   "main": "dist/commonjs/commando.js",
   "scripts": {
@@ -10,17 +10,21 @@
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-cli": "~0.1.11",
-    "load-grunt-config": "~0.5.0",
-    "load-grunt-tasks": "~0.2.0",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-jshint": "~0.7.0",
     "grunt-contrib-uglify": "~0.2.4",
-    "grunt-es6-module-transpiler": "^0.6.0",
-    "jshint": "~0.9",
     "grunt-docco": "~0.3.1",
+    "grunt-es6-module-transpiler": "^0.6.0",
+    "grunt-mocha-test": "~0.8.1",
     "grunt-simple-mocha": "~0.4.0",
-    "grunt-mocha-test": "~0.8.1"
+    "jshint": "~0.9",
+    "karma": "^0.12.28",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-mocha": "^0.1.9",
+    "load-grunt-config": "~0.5.0",
+    "load-grunt-tasks": "~0.2.0",
+    "mocha": "^2.0.1"
   },
   "repository": {
     "type": "git",
