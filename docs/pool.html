@@ -153,22 +153,8 @@ return this to enable chaining calls.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  execute: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(command, args)</span> </span>{</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>this.launcher().execute(command, args).catch(this.commandError);</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.launcher().execute(command, args, {error: <span class="hljs-keyword">this</span>.commandError});
+            <div class="content"><div class='highlight'><pre>  execute: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(command, args)</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.launcher().execute(command, args).catch(<span class="hljs-keyword">this</span>.commandError);
   },
 
   executeCommand: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name, args)</span> </span>{
@@ -179,11 +165,11 @@ return this to enable chaining calls.</p>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>main error handler to override</p>
 
@@ -194,11 +180,11 @@ return this to enable chaining calls.</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>return existing launcher or create a new one if it does not exist
 override this method to provide a new implementation</p>
@@ -215,11 +201,11 @@ override this method to provide a new implementation</p>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>internal function to bind an <code>name</code> to a <code>command</code> call</p>
 
@@ -234,11 +220,11 @@ override this method to provide a new implementation</p>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>internal function to unbind an <code>name</code> to a <code>command</code> call</p>
 
@@ -253,11 +239,11 @@ override this method to provide a new implementation</p>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>internal command which add an (<code>name</code>, <code>command</code>) couple to command pool</p>
 
@@ -277,11 +263,11 @@ override this method to provide a new implementation</p>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>internal command which remove an (<code>name</code>, <code>command</code>) couple to command pool
 support also the removal of all commands binded to <code>name</code> by passing a <code>null</code> <code>command</code>.</p>
@@ -297,11 +283,11 @@ support also the removal of all commands binded to <code>name</code> by passing 
         </li>
         
         
-        <li id="section-13">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>unbind <code>command</code></p>
 
@@ -312,11 +298,11 @@ support also the removal of all commands binded to <code>name</code> by passing 
         </li>
         
         
-        <li id="section-14">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>remove commands</p>
 
@@ -330,11 +316,11 @@ support also the removal of all commands binded to <code>name</code> by passing 
         </li>
         
         
-        <li id="section-15">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>remove any commands found</p>
 
@@ -350,11 +336,11 @@ support also the removal of all commands binded to <code>name</code> by passing 
         </li>
         
         
-        <li id="section-16">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>find the commands binded to an <code>name</code></p>
 
@@ -367,11 +353,11 @@ support also the removal of all commands binded to <code>name</code> by passing 
         </li>
         
         
-        <li id="section-17">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>add <code>commands</code> to pool and bind them to <code>name</code></p>
 
@@ -384,11 +370,11 @@ support also the removal of all commands binded to <code>name</code> by passing 
         </li>
         
         
-        <li id="section-18">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>nothing to do</p>
 
@@ -401,11 +387,11 @@ support also the removal of all commands binded to <code>name</code> by passing 
         </li>
         
         
-        <li id="section-19">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>add support for single command</p>
 
@@ -418,11 +404,11 @@ support also the removal of all commands binded to <code>name</code> by passing 
         </li>
         
         
-        <li id="section-20">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>now add the commands</p>
 
@@ -438,11 +424,11 @@ support also the removal of all commands binded to <code>name</code> by passing 
         </li>
         
         
-        <li id="section-21">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>replace <em>all</em> existing <code>commands</code> binded to an <code>name</code></p>
 
@@ -459,11 +445,11 @@ support also the removal of all commands binded to <code>name</code> by passing 
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>delete <code>commands</code> binded to <code>name</code></p>
 
@@ -485,11 +471,11 @@ support also the removal of all commands binded to <code>name</code> by passing 
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>now delete the commands</p>
 

@@ -100,7 +100,7 @@ PromiseLauncher.prototype = {</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  execute: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Command, args, options)</span> </span>{
+            <div class="content"><div class='highlight'><pre>  execute: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Command, args)</span> </span>{
     <span class="hljs-keyword">var</span> resolver,
       _this = <span class="hljs-keyword">this</span>;</pre></div></div>
             
@@ -138,7 +138,7 @@ The command created must conform to the API <code>Command(resolve, reject)</code
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.promise(resolver).catch(options.error);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.promise(resolver);
   },</pre></div></div>
             
         </li>

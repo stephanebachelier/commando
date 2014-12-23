@@ -1,6 +1,6 @@
 /**
   @module Commando
-  @version 0.6.0
+  @version 0.6.1
   */
 define("commando/launcher/default", 
   ["exports"],
@@ -42,7 +42,7 @@ define("commando/launcher/promise",
 
     PromiseLauncher.prototype = {
       // Launch the execution of `Command` function. It create the command and wraps it in a Promise.
-      execute: function(Command, args, options) {
+      execute: function(Command, args) {
         var resolver,
           _this = this;
 
@@ -55,7 +55,7 @@ define("commando/launcher/promise",
           return command.execute.apply(command, args);
         };
         // return the created promise
-        return this.promise(resolver).catch(options.error);
+        return this.promise(resolver);
       },
 
       // This function is the one responsible for creating the promise around the `resolver` provided .
@@ -109,8 +109,7 @@ define("commando/pool",
 
       // execute a `command` using command launcher
       execute: function(command, args) {
-        //this.launcher().execute(command, args).catch(this.commandError);
-        return this.launcher().execute(command, args, {error: this.commandError});
+        return this.launcher().execute(command, args).catch(this.commandError);
       },
 
       executeCommand: function (name, args) {

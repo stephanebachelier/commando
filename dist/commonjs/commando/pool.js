@@ -37,8 +37,7 @@ CommandPool.prototype = {
 
   // execute a `command` using command launcher
   execute: function(command, args) {
-    //this.launcher().execute(command, args).catch(this.commandError);
-    return this.launcher().execute(command, args, {error: this.commandError});
+    return this.launcher().execute(command, args).catch(this.commandError);
   },
 
   executeCommand: function (name, args) {
