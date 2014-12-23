@@ -1,6 +1,6 @@
 /**
   @module Commando
-  @version 0.5.5
+  @version 0.6.0
   */
 define("commando/launcher/default", 
   ["exports"],
@@ -82,7 +82,7 @@ define("commando/pool",
     //
     // Accepts these args:
     //  * `eventHub`: Object to use to bind events to command calls
-    //  * `commandMap`: Object which is basically a map to bind event to command call.
+    //  * `commandMap`: Object which is basically a map to bind name to command call.
     //    Useful to create binding at startup
     //  * `options`: Object to set some options. Supported options:
     //      + launcher: String ('default', 'promise'): enable the setup of the launcher
@@ -91,8 +91,8 @@ define("commando/pool",
     function CommandPool(eventHub, commandMap, options) {
       var _this = this;
       this.eventHub = eventHub;
-      for(var event in commandMap) {
-        _this.addCommand(event, commandMap[event]);
+      for(var name in commandMap) {
+        _this.addCommand(name, commandMap[name]);
       }
       this.options = options;
     };
@@ -110,7 +110,12 @@ define("commando/pool",
       // execute a `command` using command launcher
       execute: function(command, args) {
         //this.launcher().execute(command, args).catch(this.commandError);
-        this.launcher().execute(command, args, {error: this.commandError});
+        return this.launcher().execute(command, args, {error: this.commandError});
+      },
+
+      executeCommand: function (name, args) {
+        var commands = this.getCommands(name);
+        return this.execute(commands ? commands[0] : undefined, args);
       },
 
       // main error handler to override
@@ -125,46 +130,46 @@ define("commando/pool",
         return this._launcher;
       },
 
-      // internal function to bind an `event` to a `command` call
-      _bindCommand: function(event, command) {
-        return this.eventHub.on(event, function () {
+      // internal function to bind an `name` to a `command` call
+      _bindCommand: function(name, command) {
+        return this.eventHub.on(name, function () {
           this.execute(command, arguments);
         }, this);
       },
 
-      // internal function to unbind an `event` to a `command` call
-      _unbindCommand: function(event, command) {
-        return this.eventHub.off(event, function () {
+      // internal function to unbind an `name` to a `command` call
+      _unbindCommand: function(name, command) {
+        return this.eventHub.off(name, function () {
           this.execute(command, arguments);
         }, this);
       },
 
-      // internal command which add an (`event`, `command`) couple to command pool
-      _addCommand: function(event, Command) {
+      // internal command which add an (`name`, `command`) couple to command pool
+      _addCommand: function(name, Command) {
         var commands;
-        this._bindCommand(event, Command);
-        commands = this.getCommands(event);
+        this._bindCommand(name, Command);
+        commands = this.getCommands(name);
         if (commands) {
           commands.push(Command);
         } else {
-          this._commands[event] = [Command];
+          this._commands[name] = [Command];
         }
       },
 
-      // internal command which remove an (`event`, `command`) couple to command pool
-      // support also the removal of all commands binded to `event` by passing a `null` `command`.
-      _delCommand: function(event, command) {
+      // internal command which remove an (`name`, `command`) couple to command pool
+      // support also the removal of all commands binded to `name` by passing a `null` `command`.
+      _delCommand: function(name, command) {
         var commands;
-        if (!event) {
+        if (!name) {
           return this;
         }
         // unbind `command`
-        this._unbindCommand(event, command);
+        this._unbindCommand(name, command);
         // remove commands
         if (!command) {
-          delete this._commands[event];
+          delete this._commands[name];
         } else {
-          commands = this.getCommands(event);
+          commands = this.getCommands(name);
           // remove any commands found
           var index = commands.indexOf(command);
           if (-1 != index) {
@@ -173,17 +178,17 @@ define("commando/pool",
         }
       },
 
-      // find the commands binded to an `event`
-      getCommands: function(event) {
-        return this._commands[event];
+      // find the commands binded to an `name`
+      getCommands: function(name) {
+        return this._commands[name];
       },
 
-      // add `commands` to pool and bind them to `event`
-      addCommand: function(event, commands) {
+      // add `commands` to pool and bind them to `name`
+      addCommand: function(name, commands) {
         var commandsArr,
           _this = this;
         // nothing to do
-        if (!event) {
+        if (!name) {
           return this;
         }
         // add support for single command
@@ -192,37 +197,37 @@ define("commando/pool",
         }
         // now add the commands
         commandsArr.forEach(function(command) {
-          _this._addCommand(event, command);
+          _this._addCommand(name, command);
         });
 
         return this;
       },
 
-      // replace *all* existing `commands` binded to an `event`
-      setCommand: function(event, commands) {
-        if (!event) {
+      // replace *all* existing `commands` binded to an `name`
+      setCommand: function(name, commands) {
+        if (!name) {
           return;
         }
-        this.delCommand(event);
-        return this.addCommand(event, commands);
+        this.delCommand(name);
+        return this.addCommand(name, commands);
       },
 
-      // delete `commands` binded to `event`
-      delCommand: function(event, commands) {
+      // delete `commands` binded to `name`
+      delCommand: function(name, commands) {
         var commandsArr,
           _this = this;
-        if (!event) {
+        if (!name) {
           return this;
         }
         if (!commands) {
-          this._delCommand(event);
+          this._delCommand(name);
         } else {
           if (isArray(commands)) {
             commandsArr = [commands];
           }
           // now delete the commands
           commandsArr.forEach(function(command) {
-            _this._delCommand(event, command);
+            _this._delCommand(name, command);
           });
         }
         return this;

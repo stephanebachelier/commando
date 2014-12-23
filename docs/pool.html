@@ -97,7 +97,7 @@ export <span class="hljs-keyword">default</span> CommandPool;</pre></div></div>
               <p>Accepts these args:</p>
 <ul>
 <li><code>eventHub</code>: Object to use to bind events to command calls</li>
-<li><code>commandMap</code>: Object which is basically a map to bind event to command call.
+<li><code>commandMap</code>: Object which is basically a map to bind name to command call.
 Useful to create binding at startup</li>
 <li><code>options</code>: Object to set some options. Supported options:<ul>
 <li>launcher: String (‘default’, ‘promise’): enable the setup of the launcher
@@ -112,8 +112,8 @@ the <code>withLauncher(object)</code> method</li>
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">CommandPool</span><span class="hljs-params">(eventHub, commandMap, options)</span> </span>{
   <span class="hljs-keyword">var</span> _this = <span class="hljs-keyword">this</span>;
   <span class="hljs-keyword">this</span>.eventHub = eventHub;
-  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> event <span class="hljs-keyword">in</span> commandMap) {
-    _this.addCommand(event, commandMap[event]);
+  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> name <span class="hljs-keyword">in</span> commandMap) {
+    _this.addCommand(name, commandMap[name]);
   }
   <span class="hljs-keyword">this</span>.options = options;
 };
@@ -168,7 +168,12 @@ return this to enable chaining calls.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.launcher().execute(command, args, {error: <span class="hljs-keyword">this</span>.commandError});
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.launcher().execute(command, args, {error: <span class="hljs-keyword">this</span>.commandError});
+  },
+
+  executeCommand: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name, args)</span> </span>{
+    <span class="hljs-keyword">var</span> commands = <span class="hljs-keyword">this</span>.getCommands(name);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.execute(commands ? commands[<span class="hljs-number">0</span>] : <span class="hljs-literal">undefined</span>, args);
   },</pre></div></div>
             
         </li>
@@ -216,12 +221,12 @@ override this method to provide a new implementation</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>internal function to bind an <code>event</code> to a <code>command</code> call</p>
+              <p>internal function to bind an <code>name</code> to a <code>command</code> call</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  _bindCommand: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(event, command)</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.eventHub.on(event, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre>  _bindCommand: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, command)</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.eventHub.on(name, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
       <span class="hljs-keyword">this</span>.execute(command, <span class="hljs-built_in">arguments</span>);
     }, <span class="hljs-keyword">this</span>);
   },</pre></div></div>
@@ -235,12 +240,12 @@ override this method to provide a new implementation</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>internal function to unbind an <code>event</code> to a <code>command</code> call</p>
+              <p>internal function to unbind an <code>name</code> to a <code>command</code> call</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  _unbindCommand: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(event, command)</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.eventHub.off(event, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre>  _unbindCommand: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, command)</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.eventHub.off(name, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
       <span class="hljs-keyword">this</span>.execute(command, <span class="hljs-built_in">arguments</span>);
     }, <span class="hljs-keyword">this</span>);
   },</pre></div></div>
@@ -254,18 +259,18 @@ override this method to provide a new implementation</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>internal command which add an (<code>event</code>, <code>command</code>) couple to command pool</p>
+              <p>internal command which add an (<code>name</code>, <code>command</code>) couple to command pool</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  _addCommand: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(event, Command)</span> </span>{
+            <div class="content"><div class='highlight'><pre>  _addCommand: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, Command)</span> </span>{
     <span class="hljs-keyword">var</span> commands;
-    <span class="hljs-keyword">this</span>._bindCommand(event, Command);
-    commands = <span class="hljs-keyword">this</span>.getCommands(event);
+    <span class="hljs-keyword">this</span>._bindCommand(name, Command);
+    commands = <span class="hljs-keyword">this</span>.getCommands(name);
     <span class="hljs-keyword">if</span> (commands) {
       commands.push(Command);
     } <span class="hljs-keyword">else</span> {
-      <span class="hljs-keyword">this</span>._commands[event] = [Command];
+      <span class="hljs-keyword">this</span>._commands[name] = [Command];
     }
   },</pre></div></div>
             
@@ -278,14 +283,14 @@ override this method to provide a new implementation</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>internal command which remove an (<code>event</code>, <code>command</code>) couple to command pool
-support also the removal of all commands binded to <code>event</code> by passing a <code>null</code> <code>command</code>.</p>
+              <p>internal command which remove an (<code>name</code>, <code>command</code>) couple to command pool
+support also the removal of all commands binded to <code>name</code> by passing a <code>null</code> <code>command</code>.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  _delCommand: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(event, command)</span> </span>{
+            <div class="content"><div class='highlight'><pre>  _delCommand: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, command)</span> </span>{
     <span class="hljs-keyword">var</span> commands;
-    <span class="hljs-keyword">if</span> (!event) {
+    <span class="hljs-keyword">if</span> (!name) {
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
     }</pre></div></div>
             
@@ -302,7 +307,7 @@ support also the removal of all commands binded to <code>event</code> by passing
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._unbindCommand(event, command);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._unbindCommand(name, command);</pre></div></div>
             
         </li>
         
@@ -318,9 +323,9 @@ support also the removal of all commands binded to <code>event</code> by passing
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!command) {
-      <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>._commands[event];
+      <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>._commands[name];
     } <span class="hljs-keyword">else</span> {
-      commands = <span class="hljs-keyword">this</span>.getCommands(event);</pre></div></div>
+      commands = <span class="hljs-keyword">this</span>.getCommands(name);</pre></div></div>
             
         </li>
         
@@ -351,12 +356,12 @@ support also the removal of all commands binded to <code>event</code> by passing
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>find the commands binded to an <code>event</code></p>
+              <p>find the commands binded to an <code>name</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  getCommands: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(event)</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._commands[event];
+            <div class="content"><div class='highlight'><pre>  getCommands: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name)</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._commands[name];
   },</pre></div></div>
             
         </li>
@@ -368,11 +373,11 @@ support also the removal of all commands binded to <code>event</code> by passing
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>add <code>commands</code> to pool and bind them to <code>event</code></p>
+              <p>add <code>commands</code> to pool and bind them to <code>name</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  addCommand: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(event, commands)</span> </span>{
+            <div class="content"><div class='highlight'><pre>  addCommand: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, commands)</span> </span>{
     <span class="hljs-keyword">var</span> commandsArr,
       _this = <span class="hljs-keyword">this</span>;</pre></div></div>
             
@@ -389,7 +394,7 @@ support also the removal of all commands binded to <code>event</code> by passing
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!event) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!name) {
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
     }</pre></div></div>
             
@@ -424,7 +429,7 @@ support also the removal of all commands binded to <code>event</code> by passing
             </div>
             
             <div class="content"><div class='highlight'><pre>    commandsArr.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(command)</span> </span>{
-      _this._addCommand(event, command);
+      _this._addCommand(name, command);
     });
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
@@ -439,16 +444,16 @@ support also the removal of all commands binded to <code>event</code> by passing
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>replace <em>all</em> existing <code>commands</code> binded to an <code>event</code></p>
+              <p>replace <em>all</em> existing <code>commands</code> binded to an <code>name</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  setCommand: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(event, commands)</span> </span>{
-    <span class="hljs-keyword">if</span> (!event) {
+            <div class="content"><div class='highlight'><pre>  setCommand: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, commands)</span> </span>{
+    <span class="hljs-keyword">if</span> (!name) {
       <span class="hljs-keyword">return</span>;
     }
-    <span class="hljs-keyword">this</span>.delCommand(event);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.addCommand(event, commands);
+    <span class="hljs-keyword">this</span>.delCommand(name);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.addCommand(name, commands);
   },</pre></div></div>
             
         </li>
@@ -460,18 +465,18 @@ support also the removal of all commands binded to <code>event</code> by passing
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>delete <code>commands</code> binded to <code>event</code></p>
+              <p>delete <code>commands</code> binded to <code>name</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  delCommand: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(event, commands)</span> </span>{
+            <div class="content"><div class='highlight'><pre>  delCommand: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, commands)</span> </span>{
     <span class="hljs-keyword">var</span> commandsArr,
       _this = <span class="hljs-keyword">this</span>;
-    <span class="hljs-keyword">if</span> (!event) {
+    <span class="hljs-keyword">if</span> (!name) {
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
     }
     <span class="hljs-keyword">if</span> (!commands) {
-      <span class="hljs-keyword">this</span>._delCommand(event);
+      <span class="hljs-keyword">this</span>._delCommand(name);
     } <span class="hljs-keyword">else</span> {
       <span class="hljs-keyword">if</span> (isArray(commands)) {
         commandsArr = [commands];
@@ -491,7 +496,7 @@ support also the removal of all commands binded to <code>event</code> by passing
             </div>
             
             <div class="content"><div class='highlight'><pre>      commandsArr.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(command)</span> </span>{
-        _this._delCommand(event, command);
+        _this._delCommand(name, command);
       });
     }
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
