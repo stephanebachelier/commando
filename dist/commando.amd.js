@@ -1,7 +1,10 @@
 /**
   @module Commando
-  @version 0.7.1
-  */
+  @version 0.7.2
+  
+  @author Stéphane Bachelier <stephane.bachelier@gmail.com>
+  @license MIT
+ */
 define("commando/bindings/eventHub", 
   ["exports"],
   function(__exports__) {
