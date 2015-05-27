@@ -1,9 +1,10 @@
 "use strict";
 exports["default"] = DefaultLauncher;
 
-// Create a command launcher with `options`.
-function DefaultLauncher(errorHandler) {
+// Create a command launcher with `errorHandler` and `options`.
+function DefaultLauncher(errorHandler, options) {
   this.errorHandler = errorHandler;
+  this.options = options || {};
 }
 
 DefaultLauncher.prototype = {

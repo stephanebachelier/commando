@@ -82,12 +82,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Create a command launcher with <code>options</code>.</p>
+              <p>Create a command launcher with <code>errorHandler</code> and <code>options</code>.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">PromiseLauncher</span><span class="hljs-params">(errorHandler)</span> </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">PromiseLauncher</span><span class="hljs-params">(errorHandler, options)</span> </span>{
   <span class="hljs-keyword">this</span>.errorHandler = errorHandler;
+  <span class="hljs-keyword">this</span>.options = options || {};
 }
 
 PromiseLauncher.prototype = {</pre></div></div>
@@ -125,8 +126,7 @@ The command created must conform to the API <code>Command(resolve, reject)</code
             </div>
             
             <div class="content"><div class='highlight'><pre>    resolver = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(resolve, reject)</span> </span>{
-      <span class="hljs-keyword">var</span> command;
-      command = <span class="hljs-keyword">new</span> Command(resolve, reject);
+      <span class="hljs-keyword">var</span> command = <span class="hljs-keyword">new</span> Command(resolve, reject);
       <span class="hljs-keyword">return</span> command.execute.apply(command, args);
     };</pre></div></div>
             
@@ -176,8 +176,8 @@ as an option</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> Promise = <span class="hljs-keyword">this</span>.options.promise || <span class="hljs-keyword">this</span>.Promise;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Promise(resolver);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> PromiseConstructor = <span class="hljs-keyword">this</span>.options.promise || Promise;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> PromiseConstructor(resolver);
   }
 };</pre></div></div>
             

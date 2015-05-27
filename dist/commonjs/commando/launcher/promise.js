@@ -1,9 +1,10 @@
 "use strict";
 exports["default"] = PromiseLauncher;
 
-// Create a command launcher with `options`.
-function PromiseLauncher(errorHandler) {
+// Create a command launcher with `errorHandler` and `options`.
+function PromiseLauncher(errorHandler, options) {
   this.errorHandler = errorHandler;
+  this.options = options || {};
 }
 
 PromiseLauncher.prototype = {
@@ -16,8 +17,7 @@ PromiseLauncher.prototype = {
     // of the `Command`.
     // The command created must conform to the API `Command(resolve, reject)`.
     resolver = function(resolve, reject) {
-      var command;
-      command = new Command(resolve, reject);
+      var command = new Command(resolve, reject);
       return command.execute.apply(command, args);
     };
     // return the created promise
@@ -29,7 +29,7 @@ PromiseLauncher.prototype = {
   promise: function (resolver) {
     // create the promise based on the promise function given
     // as an option
-    var Promise = this.options.promise || this.Promise;
-    return new Promise(resolver);
+    var PromiseConstructor = this.options.promise || Promise;
+    return new PromiseConstructor(resolver);
   }
 };

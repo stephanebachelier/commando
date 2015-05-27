@@ -130,6 +130,10 @@ to support <code>on</code> and <code>off</code> handlers</li>
 
 CommandPool.prototype = {
   _commands: {},
+  _launchers: {
+    <span class="hljs-keyword">default</span>: DefaultLauncher,
+    promise: PromiseLauncher
+  },
 
   bind: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(commandMap, binder)</span> </span>{
     <span class="hljs-keyword">this</span>.withEventBinding(binder);
@@ -155,13 +159,15 @@ CommandPool.prototype = {
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>to setup a custom launcher
+              <p>to use a custom launcher just add en entry to <code>_launchers</code> property
 return this to enable chaining calls.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  withLauncher: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(launcher)</span> </span>{
-    <span class="hljs-keyword">this</span>._launcher = launcher;
+            <div class="content"><div class='highlight'><pre>  withLauncher: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name, errorHandler, options)</span> </span>{
+    <span class="hljs-keyword">var</span> Launcher = <span class="hljs-keyword">this</span>._launchers[name || <span class="hljs-string">'default'</span>] || <span class="hljs-keyword">this</span>._launchers.default;
+
+    <span class="hljs-keyword">this</span>._launcher = <span class="hljs-keyword">new</span> Launcher(errorHandler || <span class="hljs-keyword">this</span>.commandError, options);
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
   },</pre></div></div>
             
@@ -218,7 +224,7 @@ override this method to provide a new implementation</p>
             
             <div class="content"><div class='highlight'><pre>  launcher: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
     <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>._launcher) {
-      <span class="hljs-keyword">this</span>._launcher = <span class="hljs-keyword">new</span> DefaultLauncher(<span class="hljs-keyword">this</span>.commandError);
+      <span class="hljs-keyword">this</span>.withLauncher(<span class="hljs-keyword">this</span>.options.launcher);
     }
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._launcher;
   },</pre></div></div>

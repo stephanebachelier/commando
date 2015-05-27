@@ -82,12 +82,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Create a command launcher with <code>options</code>.</p>
+              <p>Create a command launcher with <code>errorHandler</code> and <code>options</code>.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">DefaultLauncher</span><span class="hljs-params">(errorHandler)</span> </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">DefaultLauncher</span><span class="hljs-params">(errorHandler, options)</span> </span>{
   <span class="hljs-keyword">this</span>.errorHandler = errorHandler;
+  <span class="hljs-keyword">this</span>.options = options || {};
 }
 
 DefaultLauncher.prototype = {

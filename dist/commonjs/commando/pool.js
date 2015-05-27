@@ -32,6 +32,10 @@ function CommandPool(eventHub, options) {
 
 CommandPool.prototype = {
   _commands: {},
+  _launchers: {
+    default: DefaultLauncher,
+    promise: PromiseLauncher
+  },
 
   bind: function (commandMap, binder) {
     this.withEventBinding(binder);
@@ -48,10 +52,12 @@ CommandPool.prototype = {
     return this;
   },
 
-  // to setup a custom launcher
+  // to use a custom launcher just add en entry to `_launchers` property
   // return this to enable chaining calls.
-  withLauncher: function (launcher) {
-    this._launcher = launcher;
+  withLauncher: function (name, errorHandler, options) {
+    var Launcher = this._launchers[name || 'default'] || this._launchers.default;
+
+    this._launcher = new Launcher(errorHandler || this.commandError, options);
     return this;
   },
 
@@ -72,7 +78,7 @@ CommandPool.prototype = {
   // override this method to provide a new implementation
   launcher: function() {
     if (!this._launcher) {
-      this._launcher = new DefaultLauncher(this.commandError);
+      this.withLauncher(this.options.launcher);
     }
     return this._launcher;
   },

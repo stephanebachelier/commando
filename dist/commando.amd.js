@@ -1,10 +1,10 @@
 /**
   @module Commando
-  @version 0.7.2
+  @version 0.8.0
   
   @author Stéphane Bachelier <stephane.bachelier@gmail.com>
   @license MIT
- */
+*/
 define("commando/bindings/eventHub", 
   ["exports"],
   function(__exports__) {
@@ -32,9 +32,10 @@ define("commando/launcher/default",
     "use strict";
     __exports__["default"] = DefaultLauncher;
 
-    // Create a command launcher with `options`.
-    function DefaultLauncher(errorHandler) {
+    // Create a command launcher with `errorHandler` and `options`.
+    function DefaultLauncher(errorHandler, options) {
       this.errorHandler = errorHandler;
+      this.options = options || {};
     }
 
     DefaultLauncher.prototype = {
@@ -66,9 +67,10 @@ define("commando/launcher/promise",
     "use strict";
     __exports__["default"] = PromiseLauncher;
 
-    // Create a command launcher with `options`.
-    function PromiseLauncher(errorHandler) {
+    // Create a command launcher with `errorHandler` and `options`.
+    function PromiseLauncher(errorHandler, options) {
       this.errorHandler = errorHandler;
+      this.options = options || {};
     }
 
     PromiseLauncher.prototype = {
@@ -81,8 +83,7 @@ define("commando/launcher/promise",
         // of the `Command`.
         // The command created must conform to the API `Command(resolve, reject)`.
         resolver = function(resolve, reject) {
-          var command;
-          command = new Command(resolve, reject);
+          var command = new Command(resolve, reject);
           return command.execute.apply(command, args);
         };
         // return the created promise
@@ -94,8 +95,8 @@ define("commando/launcher/promise",
       promise: function (resolver) {
         // create the promise based on the promise function given
         // as an option
-        var Promise = this.options.promise || this.Promise;
-        return new Promise(resolver);
+        var PromiseConstructor = this.options.promise || Promise;
+        return new PromiseConstructor(resolver);
       }
     };
   });
@@ -136,6 +137,10 @@ define("commando/pool",
 
     CommandPool.prototype = {
       _commands: {},
+      _launchers: {
+        default: DefaultLauncher,
+        promise: PromiseLauncher
+      },
 
       bind: function (commandMap, binder) {
         this.withEventBinding(binder);
@@ -152,10 +157,12 @@ define("commando/pool",
         return this;
       },
 
-      // to setup a custom launcher
+      // to use a custom launcher just add en entry to `_launchers` property
       // return this to enable chaining calls.
-      withLauncher: function (launcher) {
-        this._launcher = launcher;
+      withLauncher: function (name, errorHandler, options) {
+        var Launcher = this._launchers[name || 'default'] || this._launchers.default;
+
+        this._launcher = new Launcher(errorHandler || this.commandError, options);
         return this;
       },
 
@@ -176,7 +183,7 @@ define("commando/pool",
       // override this method to provide a new implementation
       launcher: function() {
         if (!this._launcher) {
-          this._launcher = new DefaultLauncher(this.commandError);
+          this.withLauncher(this.options.launcher);
         }
         return this._launcher;
       },
