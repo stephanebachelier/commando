@@ -15,6 +15,7 @@ module.exports = function(grunt) {
     'transpile:amd',
     'transpile:commonjs',
     'concat:amd',
+    'concat:commonjs',
     'jshint:output',
     'uglify'
   ]);
@@ -24,8 +25,16 @@ module.exports = function(grunt) {
   //this.registerTask('test', 'Run the test', [ 'simplemocha', 'jshint:test' ]);
   this.registerTask('test', 'Run the test', [ 'karma', 'jshint:test' ]);
 
-  config.env = process.env;
-  config.pkg = grunt.file.readJSON('package.json')
+  var pkg = grunt.file.readJSON('package.json');
 
+  config.env = process.env;
+  config.pkg = pkg;
+  config.banner = '/**\n' +
+          '  @module Commando\n' +
+          '  @version <%= pkg.version %>\n' +
+          '  \n' +
+          '  @author <%= pkg.author %>\n' +
+          '  @license <%= pkg.license %>\n' +
+          '*/\n';
   grunt.initConfig(config);
 };

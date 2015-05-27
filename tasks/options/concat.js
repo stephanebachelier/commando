@@ -3,13 +3,16 @@ module.exports = {
     src: ['tmp/commando/**/*.amd.js', 'tmp/commando.amd.js'],
     dest: 'dist/commando.amd.js',
     options: {
-      banner: '/**\n' +
-              '  @module Commando\n' +
-              '  @version <%= pkg.version %>\n' +
-              '  */\n'
+      banner: '<%= banner %>'
     }
   },
-
+  commonjs: {
+    src: ['dist/commonjs/main.js'],
+    dest: 'dist/commonjs/main.js',
+    options: {
+      banner: '<%= banner %>'
+    }
+  },
   amdNoVersion: {
     src: ['tmp/commando/**/*.amd.js', 'tmp/commando.amd.js'],
     dest: 'dist/commando.amd.js'
