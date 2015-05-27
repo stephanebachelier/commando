@@ -24,6 +24,11 @@
               </a>
             
               
+              <a class="source" href="eventHub.html">
+                eventHub.js
+              </a>
+            
+              
               <a class="source" href="default.html">
                 default.js
               </a>
@@ -171,7 +176,8 @@ as an option</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">this</span>.options.promise(resolver);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> Promise = <span class="hljs-keyword">this</span>.options.promise || <span class="hljs-keyword">this</span>.Promise;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Promise(resolver);
   }
 };</pre></div></div>
             

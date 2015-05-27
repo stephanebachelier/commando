@@ -2,6 +2,7 @@
 var DefaultLauncher = require("commando/launcher/default")["default"];
 var PromiseLauncher = require("commando/launcher/promise")["default"];
 var isArray = require("commando/utils").isArray;
+var eventBinding = require("commando/bindings/eventHub")["default"];
 
 exports["default"] = CommandPool;
 
@@ -10,23 +11,42 @@ exports["default"] = CommandPool;
 //
 // Accepts these args:
 //  * `eventHub`: Object to use to bind events to command calls
-//  * `commandMap`: Object which is basically a map to bind name to command call.
-//    Useful to create binding at startup
 //  * `options`: Object to set some options. Supported options:
+//      + `commandMap`: Object which is basically a map to bind name to command call.
+//      Useful to create binding at startup
 //      + launcher: String ('default', 'promise'): enable the setup of the launcher
 //      using the default ones provided. If you want to setup a custom launcher use
 //      the `withLauncher(object)` method
-function CommandPool(eventHub, commandMap, options) {
-  var _this = this;
-  this.eventHub = eventHub;
-  for(var name in commandMap) {
-    _this.addCommand(name, commandMap[name]);
+//      + binder: Object, provide the event binder to map event to commands
+//      by default will use the one provided with commando which expect eventHub
+//      to support `on` and `off` handlers
+function CommandPool(eventHub, options) {
+  this.options = options || {};
+
+  this._eventHub = eventHub;
+
+  if (this.options.commandMap) {
+    this.bind(this.options.commandMap);
   }
-  this.options = options;
-};
+}
 
 CommandPool.prototype = {
   _commands: {},
+
+  bind: function (commandMap, binder) {
+    this.withEventBinding(binder);
+
+    for(var name in commandMap) {
+      this.addCommand(name, commandMap[name]);
+    }
+  },
+
+  withEventBinding: function (binder) {
+    if (!this._eventBinding) {
+      this._eventBinding = (binder || this.options.binder || eventBinding)(this._eventHub, this);
+    }
+    return this;
+  },
 
   // to setup a custom launcher
   // return this to enable chaining calls.
@@ -59,16 +79,15 @@ CommandPool.prototype = {
 
   // internal function to bind an `name` to a `command` call
   _bindCommand: function(name, command) {
-    return this.eventHub.on(name, function () {
-      this.execute(command, arguments);
-    }, this);
+    if (!this._eventBinding) {
+      this.withEventBinding();
+    }
+    return this._eventBinding.bind(name, command);
   },
 
   // internal function to unbind an `name` to a `command` call
   _unbindCommand: function(name, command) {
-    return this.eventHub.off(name, function () {
-      this.execute(command, arguments);
-    }, this);
+    return this._eventBinding.unbind(name, command);
   },
 
   // internal command which add an (`name`, `command`) couple to command pool
@@ -99,7 +118,7 @@ CommandPool.prototype = {
       commands = this.getCommands(name);
       // remove any commands found
       var index = commands.indexOf(command);
-      if (-1 != index) {
+      if (-1 !== index) {
         commands.splice(index, 1);
       }
     }
