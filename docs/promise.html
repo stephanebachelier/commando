@@ -86,8 +86,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">PromiseLauncher</span><span class="hljs-params">(options)</span> </span>{
-  <span class="hljs-keyword">this</span>.options = options;
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">PromiseLauncher</span><span class="hljs-params">(errorHandler)</span> </span>{
+  <span class="hljs-keyword">this</span>.errorHandler = errorHandler;
 }
 
 PromiseLauncher.prototype = {</pre></div></div>
@@ -143,7 +143,7 @@ The command created must conform to the API <code>Command(resolve, reject)</code
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.promise(resolver);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.promise(resolver).catch(<span class="hljs-keyword">this</span>.errorHandler);
   },</pre></div></div>
             
         </li>

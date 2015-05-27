@@ -1,6 +1,6 @@
 /**
   @module Commando
-  @version 0.7.0
+  @version 0.7.1
   */
 define("commando/bindings/eventHub", 
   ["exports"],
@@ -30,21 +30,28 @@ define("commando/launcher/default",
     __exports__["default"] = DefaultLauncher;
 
     // Create a command launcher with `options`.
-    function DefaultLauncher() {}
+    function DefaultLauncher(errorHandler) {
+      this.errorHandler = errorHandler;
+    }
 
     DefaultLauncher.prototype = {
-      execute: function (command, args, options) {
+      execute: function (Command, args, options) {
         var errorHandler;
-        if (options && options.error && typeof options.error === 'function') {
-          errorHandler = options.error;
-        }
 
         try{
+          if (options && options.error && typeof options.error === 'function') {
+            errorHandler = options.error;
+          }
+          var command = new Command();
           return command.execute.apply(command, args);
         }
         catch (e) {
           if (errorHandler) {
             errorHandler(e);
+          }
+
+          if (this.errorHandler) {
+            this.errorHandler(e);
           }
         }
       }
@@ -57,8 +64,8 @@ define("commando/launcher/promise",
     __exports__["default"] = PromiseLauncher;
 
     // Create a command launcher with `options`.
-    function PromiseLauncher(options) {
-      this.options = options;
+    function PromiseLauncher(errorHandler) {
+      this.errorHandler = errorHandler;
     }
 
     PromiseLauncher.prototype = {
@@ -76,7 +83,7 @@ define("commando/launcher/promise",
           return command.execute.apply(command, args);
         };
         // return the created promise
-        return this.promise(resolver);
+        return this.promise(resolver).catch(this.errorHandler);
       },
 
       // This function is the one responsible for creating the promise around the `resolver` provided .
@@ -151,7 +158,7 @@ define("commando/pool",
 
       // execute a `command` using command launcher
       execute: function(command, args) {
-        return this.launcher().execute(command, args).catch(this.commandError);
+        return this.launcher().execute(command, args);
       },
 
       executeCommand: function (name, args) {
@@ -166,7 +173,7 @@ define("commando/pool",
       // override this method to provide a new implementation
       launcher: function() {
         if (!this._launcher) {
-          this._launcher = new DefaultLauncher();
+          this._launcher = new DefaultLauncher(this.commandError);
         }
         return this._launcher;
       },

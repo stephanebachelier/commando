@@ -86,21 +86,28 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">DefaultLauncher</span><span class="hljs-params">()</span> </span>{}
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">DefaultLauncher</span><span class="hljs-params">(errorHandler)</span> </span>{
+  <span class="hljs-keyword">this</span>.errorHandler = errorHandler;
+}
 
 DefaultLauncher.prototype = {
-  execute: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(command, args, options)</span> </span>{
+  execute: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(Command, args, options)</span> </span>{
     <span class="hljs-keyword">var</span> errorHandler;
-    <span class="hljs-keyword">if</span> (options &amp;&amp; options.error &amp;&amp; <span class="hljs-keyword">typeof</span> options.error === <span class="hljs-string">'function'</span>) {
-      errorHandler = options.error;
-    }
 
     <span class="hljs-keyword">try</span>{
+      <span class="hljs-keyword">if</span> (options &amp;&amp; options.error &amp;&amp; <span class="hljs-keyword">typeof</span> options.error === <span class="hljs-string">'function'</span>) {
+        errorHandler = options.error;
+      }
+      <span class="hljs-keyword">var</span> command = <span class="hljs-keyword">new</span> Command();
       <span class="hljs-keyword">return</span> command.execute.apply(command, args);
     }
     <span class="hljs-keyword">catch</span> (e) {
       <span class="hljs-keyword">if</span> (errorHandler) {
         errorHandler(e);
+      }
+
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.errorHandler) {
+        <span class="hljs-keyword">this</span>.errorHandler(e);
       }
     }
   }
